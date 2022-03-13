@@ -25,14 +25,14 @@ const createAndSavePerson = async (done) => {
   done(null, data)
 }
 
-const createManyPeople = async(arrayOfPeople, done) => {
-
+const createManyPeople = async (arrayOfPeople, done) => {
   const data = await Person.create(arrayOfPeople)
   done(null, data)
 }
 
-const findPeopleByName = (personName, done) => {
-  done(null /*, data*/)
+const findPeopleByName = async (personName, done) => {
+  const data = await Model.find({ name: personName }).exec()
+  done(null, data)
 }
 
 const findOneByFood = (food, done) => {
