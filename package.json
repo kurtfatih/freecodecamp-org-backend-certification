@@ -1,12 +1,14 @@
 {
   "name": "fcc-learn-npm-package-json",
   "author": "Fatih Kurt",
+  "homepage": "https://murmuring-bastion-27675.herokuapp.com/",
   "dependencies": {
     "express": "^4.14.0"
   },
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "deploy": "git push heroku master"
   },
   "repository": {
     "type": "git",
