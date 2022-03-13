@@ -1,9 +1,12 @@
 require("dotenv").config()
+const bodyParser = require("body-parser")
 var express = require("express")
 var app = express()
 
 const absoluteViewIndexHtmlPath = __dirname + "/views/index.html"
 const absoluteStyleSheetPath = __dirname + "/public"
+
+app.use(bodyParser.urlencoded({ extended: false }))
 
 app.use((req, res, next) => {
   console.log(`${req.method} ${req.path} - ${req.ip}`)
