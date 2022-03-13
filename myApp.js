@@ -1,56 +1,70 @@
-require("dotenv").config()
-const bodyParser = require("body-parser")
-var express = require("express")
-var app = express()
+require('dotenv').config();
 
-const absoluteViewIndexHtmlPath = __dirname + "/views/index.html"
-const absoluteStyleSheetPath = __dirname + "/public"
 
-app.use(bodyParser.urlencoded({ extended: false }))
+let Person;
 
-app.use((req, res, next) => {
-  console.log(`${req.method} ${req.path} - ${req.ip}`)
-  next()
-})
+const createAndSavePerson = (done) => {
+  done(null /*, data*/);
+};
 
-app.use("/public", express.static(absoluteStyleSheetPath))
+const createManyPeople = (arrayOfPeople, done) => {
+  done(null /*, data*/);
+};
 
-app.get("/", (req, res) => {
-  res.sendFile(absoluteViewIndexHtmlPath)
-})
+const findPeopleByName = (personName, done) => {
+  done(null /*, data*/);
+};
 
-app.get("/json", (req, res) => {
-  const msg = "Hello json"
-  const jsonResponse =
-    process.env.MESSAGE_STYLE === "uppercase" ? msg.toUpperCase() : msg
-  res.json({ message: jsonResponse })
-})
+const findOneByFood = (food, done) => {
+  done(null /*, data*/);
+};
 
-app.get(
-  "/now",
-  (req, res, next) => {
-    req.time = new Date().toString()
-    next()
-  },
-  (req, res) => {
-    res.json({ time: req.time })
-  }
-)
+const findPersonById = (personId, done) => {
+  done(null /*, data*/);
+};
 
-app.get("/:word/echo", (req, res) => {
-  const { word } = req.params
-  res.json({ echo: word })
-})
+const findEditThenSave = (personId, done) => {
+  const foodToAdd = "hamburger";
 
-app
-  .get("/name", (req, res) => {
-    const { first, last } = req.query
-    const newObj = `${first} ${last}`
-    res.json({ name: newObj })
-  })
-  .post("/name", (req, res) => {
-    const { first, last } = req.body
-    const newObj = `${first} ${last}`
-    res.json({ name: newObj })
-  })
-module.exports = app
+  done(null /*, data*/);
+};
+
+const findAndUpdate = (personName, done) => {
+  const ageToSet = 20;
+
+  done(null /*, data*/);
+};
+
+const removeById = (personId, done) => {
+  done(null /*, data*/);
+};
+
+const removeManyPeople = (done) => {
+  const nameToRemove = "Mary";
+
+  done(null /*, data*/);
+};
+
+const queryChain = (done) => {
+  const foodToSearch = "burrito";
+
+  done(null /*, data*/);
+};
+
+/** **Well Done !!**
+/* You completed these challenges, let's go celebrate !
+ */
+
+//----- **DO NOT EDIT BELOW THIS LINE** ----------------------------------
+
+exports.PersonModel = Person;
+exports.createAndSavePerson = createAndSavePerson;
+exports.findPeopleByName = findPeopleByName;
+exports.findOneByFood = findOneByFood;
+exports.findPersonById = findPersonById;
+exports.findEditThenSave = findEditThenSave;
+exports.findAndUpdate = findAndUpdate;
+exports.createManyPeople = createManyPeople;
+exports.removeById = removeById;
+exports.removeManyPeople = removeManyPeople;
+exports.queryChain = queryChain;
