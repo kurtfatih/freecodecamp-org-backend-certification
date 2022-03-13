@@ -31,7 +31,7 @@ const createManyPeople = async (arrayOfPeople, done) => {
 }
 
 const findPeopleByName = async (personName, done) => {
-  const data = await Model.find({ name: personName }).exec()
+  const data = await Person.find({ name: personName }).exec()
   done(null, data)
 }
 
