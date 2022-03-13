@@ -25,7 +25,8 @@ const createAndSavePerson = async (done) => {
   done(null, data)
 }
 
-const createManyPeople = (arrayOfPeople, done) => {
+const createManyPeople = async(arrayOfPeople, done) => {
+
   const data = await Person.create(arrayOfPeople)
   done(null, data)
 }
