@@ -82,7 +82,7 @@ const queryChain = async (done) => {
   })
     .sort({ name: "asc" })
     .limit(2)
-    .select("+age")
+    .select("-age")
     .exec()
 
   done(null, data)
