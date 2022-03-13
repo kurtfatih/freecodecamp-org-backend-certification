@@ -3,6 +3,12 @@
   "author": "Fatih Kurt",
   "description": "This is the project for freecodecamp.org backend-certification",
   "homepage": "https://murmuring-bastion-27675.herokuapp.com/",
+  "keywords": [
+    "descriptive",
+    "related",
+    "words",
+    "freecodecamp"
+  ],
   "dependencies": {
     "express": "^4.14.0"
   },
