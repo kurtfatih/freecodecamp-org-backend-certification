@@ -5,6 +5,11 @@ var app = express()
 const absoluteViewIndexHtmlPath = __dirname + "/views/index.html"
 const absoluteStyleSheetPath = __dirname + "/public"
 
+app.use((req, res, next) => {
+  console.log(`${req.method} ${req.path} - ${req.ip}`)
+  next()
+})
+
 app.use("/public", express.static(absoluteStyleSheetPath))
 
 app.get("/", (req, res) => {
