@@ -42,10 +42,15 @@ app.get("/:word/echo", (req, res) => {
   res.json({ echo: word })
 })
 
-app.get("/name", (req, res) => {
-  const { first, last } = req.query
-  const newObj = `${first} ${last}`
-  res.json({ name: newObj })
-})
-
+app
+  .get("/name", (req, res) => {
+    const { first, last } = req.query
+    const newObj = `${first} ${last}`
+    res.json({ name: newObj })
+  })
+  .post("/name", (req, res) => {
+    const { first, last } = req.body
+    const newObj = `${first} ${last}`
+    res.json({ name: newObj })
+  })
 module.exports = app
