@@ -45,10 +45,12 @@ const findPersonById = async (personId, done) => {
   done(null, data)
 }
 
-const findEditThenSave = (personId, done) => {
+const findEditThenSave = async (personId, done) => {
   const foodToAdd = "hamburger"
-
-  done(null /*, data*/)
+  const person = await Person.findById(personId).exec()
+  person.favoriteFoods = person.favoriteFoods.push(foodToAdd)
+  const data = await person.save()
+  done(null, data)
 }
 
 const findAndUpdate = (personName, done) => {
