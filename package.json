@@ -1,26 +1,14 @@
 {
-  "name": "fcc-learn-npm-package-json",
-  "author": "Fatih Kurt",
-  "description": "This is the project for freecodecamp.org backend-certification",
-  "homepage": "https://murmuring-bastion-27675.herokuapp.com/",
-  "version": "2.10.2",
-  "keywords": [
-    "descriptive",
-    "related",
-    "words",
-    "freecodecamp"
-  ],
-  "license": "MIT",
-  "dependencies": {
-    "express": "^4.14.0"
-  },
-  "main": "server.js",
-  "scripts": {
-    "start": "node server.js",
-    "deploy": "git push heroku master"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://idontknow/todo.git"
-  }
+	"name": "fcc-learn-node-with-express",
+	"version": "0.1.0",
+	"dependencies": {
+		"express": "^4.14.0",
+		"body-parser": "^1.15.2",
+		"cookie-parser": "^1.4.3",
+		"fcc-express-bground": "https://github.com/freeCodeCamp/fcc-express-bground-pkg.git"
+	},
+	"main": "server.js",
+	"scripts": {
+		"start": "node server.js"
+	}
 }
