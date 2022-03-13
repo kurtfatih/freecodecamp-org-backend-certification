@@ -48,7 +48,7 @@ const findPersonById = async (personId, done) => {
 const findEditThenSave = async (personId, done) => {
   const foodToAdd = "hamburger"
   const person = await Person.findById(personId).exec()
-  person.favoriteFoods = person.favoriteFoods.push(foodToAdd)
+  person.favoriteFoods.push(foodToAdd)
   const data = await person.save()
   done(null, data)
 }
