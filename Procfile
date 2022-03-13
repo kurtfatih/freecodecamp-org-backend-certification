@@ -1,0 +1,1 @@
+heroku config:set MESSAGE_STYLE=uppercase
