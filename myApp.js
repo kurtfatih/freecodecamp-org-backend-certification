@@ -75,10 +75,17 @@ const removeManyPeople = async (done) => {
   done(null, data)
 }
 
-const queryChain = (done) => {
+const queryChain = async (done) => {
   const foodToSearch = "burrito"
+  const data = await Person.find({
+    favoriteFoods: { $in: [foodToSearch] }
+  })
+    .sort({ name: 1 })
+    .limit(2)
+    .select("+age")
+    .exec()
 
-  done(null /*, data*/)
+  done(null, data)
 }
 
 /** **Well Done !!**
