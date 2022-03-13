@@ -80,7 +80,7 @@ const queryChain = async (done) => {
   const data = await Person.find({
     favoriteFoods: foodToSearch
   })
-    .sort({ name: 1 })
+    .sort({ name: "asc" })
     .limit(2)
     .select("+age")
     .exec()
