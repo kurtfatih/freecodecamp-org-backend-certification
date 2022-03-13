@@ -3,6 +3,7 @@
   "author": "Fatih Kurt",
   "description": "This is the project for freecodecamp.org backend-certification",
   "homepage": "https://murmuring-bastion-27675.herokuapp.com/",
+  "version": "1.0.0",
   "keywords": [
     "descriptive",
     "related",
