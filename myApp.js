@@ -53,10 +53,14 @@ const findEditThenSave = async (personId, done) => {
   done(null, data)
 }
 
-const findAndUpdate = (personName, done) => {
+const findAndUpdate = async (personName, done) => {
   const ageToSet = 20
-
-  done(null /*, data*/)
+  const data = await Person.findOneAndUpdate(
+    { name: personName },
+    { age: ageToSet },
+    { new: true }
+  )
+  done(null, data)
 }
 
 const removeById = (personId, done) => {
