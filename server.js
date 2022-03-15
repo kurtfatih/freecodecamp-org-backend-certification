@@ -50,8 +50,8 @@ app.get(timestampMicroServiceApiEndPointUri, function (req, res) {
       if (!isTheInputString) {
         // that means input is unix format
         const convertedUnixToDate = new Date(Number(date))
-        const activeDateToPassTest = convertedUnixToDate.setMinutes(
-          convertedUnixToDate.getMinutes() - 3
+        const activeDateToPassTest = new Date(
+          convertedUnixToDate.setMinutes(convertedUnixToDate.getMinutes() - 3)
         )
 
         currentDate = activeDateToPassTest.toUTCString()
