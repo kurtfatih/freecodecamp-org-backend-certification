@@ -38,13 +38,11 @@ app.get(timestampMicroServiceApiEndPointUri, function (req, res) {
   // date is string
   let currentDate
   let currentUnix
-  console.log("unix", date)
   const isTheInputString = isNaN(date)
   const isValidDateOrTimestamp = isTheInputString
     ? new Date(date).getTime() > 0
     : new Date(Number(date)).getTime() > 0
 
-  console.log("isthe", isValidDateOrTimestamp)
   if (isValidDateOrTimestamp) {
     currentDate = new Date(date).toUTCString()
     currentUnix = new Date(date).valueOf()
