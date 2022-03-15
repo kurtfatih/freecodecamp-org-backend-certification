@@ -19,6 +19,10 @@ const timestamMicroServiceProjectUrl = "/timestamp-microservice"
 const timestampMicroServiceApiEndPointUri =
   timestamMicroServiceProjectUrl + apiEndPoint + "/:date?"
 
+const reqeustHeaderParserMicroservice = "/request-header-parser-microservice"
+const requestHeaderParserMicroServiceEndPoint =
+  timestammicroserviceprojecturl + apiendpoint + reqeustHeaderParserMicroservice
+
 const services = [timestamMicroServiceProjectUrl].join(" ")
 
 app.get("/", function (req, res) {
@@ -27,6 +31,14 @@ app.get("/", function (req, res) {
   res.send(
     `Our services : <a href=${protocol}://${host}${services}>Timestamp</a>`
   )
+})
+
+app.get(reqeustHeaderParserMicroservice, function (req, res) {
+  res.sendFile(__dirname + "/timestamp/views/index.html")
+})
+
+app.get(requestHeaderParserMicroServiceEndPoint, function (req, res) {
+  res.send("Hello")
 })
 
 app.get(timestamMicroServiceProjectUrl, function (req, res) {
