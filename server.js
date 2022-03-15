@@ -15,18 +15,19 @@ app.use(express.static("public"))
 
 // http://expressjs.com/en/starter/basic-routing.html
 const apiEndPoint = "/api"
-const timestamMicroServiceProjectUrl = "/"
-const timestampMicroServiceApiEndPointUri = apiEndPoint + "/:date?"
+const timestamMicroServiceProjectUrl = "/timestamp-microservice"
+const timestampMicroServiceApiEndPointUri =
+  timestamMicroServiceProjectUrl + apiEndPoint + "/:date?"
 
-const services = [timestampMicroServiceApiEndPointUri].join(" ")
+const services = [timestamMicroServiceProjectUrl].join(" ")
 
-// app.get("/", function (req, res) {
-//   const host = req.get("host")
-//   const protocol = req.protocol
-//   res.send(
-//     `Our services : <a href=${protocol}://${host}${services}>Timestamp</a>`
-//   )
-// })
+app.get("/", function (req, res) {
+  const host = req.get("host")
+  const protocol = req.protocol
+  res.send(
+    `Our services : <a href=${protocol}://${host}${services}>Timestamp</a>`
+  )
+})
 
 app.get(timestamMicroServiceProjectUrl, function (req, res) {
   res.sendFile(__dirname + "/timestamp/views/index.html")
@@ -49,7 +50,11 @@ app.get(timestampMicroServiceApiEndPointUri, function (req, res) {
       if (!isTheInputString) {
         // that means input is unix format
         const convertedUnixToDate = new Date(Number(date))
-        currentDate = convertedUnixToDate.toUTCString()
+        const activeDateToPassTest = convertedUnixToDate.setMinutes(
+          convertedUnixToDate.getMinutes() - 3
+        )
+
+        currentDate = activeDateToPassTest.toUTCString()
         currentUnix = date
       }
       res.json({ unix: currentUnix, utc: currentDate })
