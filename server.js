@@ -50,14 +50,10 @@ app.get(timestampMicroServiceApiEndPointUri, function (req, res) {
       if (!isTheInputString) {
         // that means input is unix format
         const convertedUnixToDate = new Date(Number(date))
-        const activeDateToPassTest = new Date(
-          convertedUnixToDate.setMinutes(convertedUnixToDate.getMinutes() - 3)
-        )
-
-        currentDate = activeDateToPassTest.toUTCString()
+        currentDate = convertedUnixToDate.toUTCString()
         currentUnix = date
       }
-      res.json({ unix: currentUnix, utc: currentDate })
+      res.json({ unix: Number(currentUnix), utc: currentDate })
     } else {
       res.json({ error: "Invalid Date" })
     }
