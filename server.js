@@ -17,7 +17,7 @@ app.use(express.static("public"))
 const apiEndPoint = "/api"
 const timestamMicroServiceProjectUrl = "/timestamp-microservice"
 const timestampMicroServiceApiEndPointUri =
-  timestamMicroServiceProjectUrl + apiEndPoint + "/:date"
+  timestamMicroServiceProjectUrl + apiEndPoint + "/:date?"
 
 const services = [timestamMicroServiceProjectUrl].join(" ")
 
@@ -43,18 +43,25 @@ app.get(timestampMicroServiceApiEndPointUri, function (req, res) {
     ? new Date(date).getTime() > 0
     : new Date(Number(date)).getTime() > 0
 
-  if (isValidDateOrTimestamp) {
-    currentDate = new Date(date).toUTCString()
-    currentUnix = new Date(date).valueOf()
-    if (!isTheInputString) {
-      // that means input is unix format
-      const convertedUnixToDate = new Date(Number(date))
-      currentDate = convertedUnixToDate.toUTCString()
-      currentUnix = date
+  if (date) {
+    if (isValidDateOrTimestamp) {
+      currentDate = new Date(date).toUTCString()
+      currentUnix = new Date(date).valueOf()
+      if (!isTheInputString) {
+        // that means input is unix format
+        const convertedUnixToDate = new Date(Number(date))
+        currentDate = convertedUnixToDate.toUTCString()
+        currentUnix = date
+      }
+      res.json({ unix: currentUnix, utc: currentDate })
+    } else {
+      res.json({ error: "Invalid Date" })
     }
-    res.json({ unix: currentUnix, utc: currentDate })
   } else {
-    res.json({ error: "Invalid Date" })
+    const date = new Date()
+    const unitFormat = date.valueOf()
+    const utcString = date.toUTCString()
+    res.json({ unix: unitFormat, utc: utcString })
   }
 })
 
