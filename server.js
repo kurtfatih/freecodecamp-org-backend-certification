@@ -8,34 +8,58 @@ var app = express()
 // enable CORS (https://en.wikipedia.org/wiki/Cross-origin_resource_sharing)
 // so that your API is remotely testable by FCC
 var cors = require("cors")
-app.use(cors({ optionsSuccessStatus: 200 })) // some legacy browsers choke on 204
-
-// http://expressjs.com/en/starter/static-files.html
-app.use(express.static("public"))
-
-// http://expressjs.com/en/starter/basic-routing.html
 const apiEndPoint = "/api"
 const timestamMicroServiceProjectUrl = "/timestamp-microservice"
+const reqeustHeaderParserMicroserviceUrl = "/request-header-parser-microservice"
+
+// services api endpoints
 const timestampMicroServiceApiEndPointUri =
   timestamMicroServiceProjectUrl + apiEndPoint + "/:date?"
 
-const reqeustHeaderParserMicroservice = "/request-header-parser-microservice"
 const requestHeaderParserMicroServiceEndPoint =
-  timestammicroserviceprojecturl + apiendpoint + reqeustHeaderParserMicroservice
+  reqeustHeaderParserMicroserviceUrl + apiEndPoint
+app.use(cors({ optionsSuccessStatus: 200 })) // some legacy browsers choke on 204
 
-const services = [timestamMicroServiceProjectUrl].join(" ")
+// http://expressjs.com/en/starter/static-files.html
+app.use(timestamMicroServiceProjectUrl, express.static("timestamp/public"))
+app.use(
+  reqeustHeaderParserMicroserviceUrl,
+  express.static("request-header-parser/public")
+)
+
+// http://expressjs.com/en/starter/basic-routing.html
+
+const services = [
+  timestamMicroServiceProjectUrl,
+  reqeustHeaderParserMicroserviceUrl
+].join(" ")
 
 app.get("/", function (req, res) {
   const host = req.get("host")
   const protocol = req.protocol
+
   res.send(
-    `Our services : <a href=${protocol}://${host}${services}>Timestamp</a>`
+    `Our services : <a href=${protocol}://${host}${reqeustHeaderParserMicroservice}>Timestamp</a>`
   )
 })
 
-app.get(reqeustHeaderParserMicroservice, function (req, res) {
-  res.sendFile(__dirname + "/timestamp/views/index.html")
+app.get(reqeustHeaderParserMicroserviceUrl, function (req, res) {
+  res.sendFile(__dirname + "/request-header-parser/views/index.html")
 })
+
+app.get(
+  requestHeaderParserMicroServiceEndPoint + "/whoami",
+  function (req, res) {
+    //     {"ipaddress":"159.20.14.100","language":"en-US,en;q=0.5",
+    // "software":"Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:50.0) Gecko/20100101 Firefox/50.0"}
+
+    const software = req.headers["user-agent"]
+    const language = req.headers["accept-language"]
+    const ipAddress = req.headers["x-forwarded-for"] || req.socket.remoteAddress
+
+    res.json({ ipaddress: ipAddress, language, software })
+  }
+)
 
 app.get(requestHeaderParserMicroServiceEndPoint, function (req, res) {
   res.send("Hello")
