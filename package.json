@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "nodemon --watch ./server.js"
+    "dev": "nodemon --watch ./server.js",
+    "deploy": "git push heroku master"
   },
   "dependencies": {
     "express": "^4.12.4",
