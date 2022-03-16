@@ -1,16 +1,31 @@
-// server.js
-// where your node app starts
+require("dotenv").config()
+const bodyParser = require("body-parser")
 
-// init project
-var express = require("express")
-var app = express()
+const URL = require("url").URL
 
-// enable CORS (https://en.wikipedia.org/wiki/Cross-origin_resource_sharing)
-// so that your API is remotely testable by FCC
-var cors = require("cors")
+const { Schema } = require("mongoose")
+const mongoose = require("mongoose")
+
+const cors = require("cors")
+const express = require("express")
+const app = express()
+
+const dns = require("dns")
+
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
+
+const ShortenerUrl = mongoose.model("ShortenerUrl", {
+  url: { type: String },
+  shortCode: { type: Number }
+})
+
 const apiEndPoint = "/api"
 const timestamMicroServiceProjectUrl = "/timestamp-microservice"
 const reqeustHeaderParserMicroserviceUrl = "/request-header-parser-microservice"
+const urlShortenerMicroserviceUri = "/urlshortener"
 
 // services api endpoints
 const timestampMicroServiceApiEndPointUri =
@@ -18,20 +33,26 @@ const timestampMicroServiceApiEndPointUri =
 
 const requestHeaderParserMicroServiceEndPoint =
   reqeustHeaderParserMicroserviceUrl + apiEndPoint
-app.use(cors({ optionsSuccessStatus: 200 })) // some legacy browsers choke on 204
 
+const urlShortenerShortUrlEndPoint =
+  urlShortenerMicroserviceUri + apiEndPoint + "/shorturl"
+
+const urlencodedParser = bodyParser.urlencoded({ extended: false })
+app.use(cors({ optionsSuccessStatus: 200 })) // some legacy browsers choke on 204
 // http://expressjs.com/en/starter/static-files.html
 app.use(timestamMicroServiceProjectUrl, express.static("timestamp/public"))
 app.use(
   reqeustHeaderParserMicroserviceUrl,
   express.static("request-header-parser/public")
 )
+app.use(urlShortenerMicroserviceUri, express.static("urlshortener/public"))
 
 // http://expressjs.com/en/starter/basic-routing.html
 
 const services = [
   timestamMicroServiceProjectUrl,
-  reqeustHeaderParserMicroserviceUrl
+  reqeustHeaderParserMicroserviceUrl,
+  urlShortenerMicroserviceUri
 ].join(" ")
 
 app.get("/", function (req, res) {
@@ -39,8 +60,11 @@ app.get("/", function (req, res) {
   const protocol = req.protocol
 
   res.send(
-    `Our services : <a href=${protocol}://${host}${reqeustHeaderParserMicroservice}>Timestamp</a>`
+    `Our services : <a href=${protocol}://${host}${reqeustHeaderParserMicroserviceUrl}>Timestamp</a>`
   )
+})
+app.get(urlShortenerMicroserviceUri, function (req, res) {
+  res.sendFile(__dirname + "/urlshortener/views/index.html")
 })
 
 app.get(reqeustHeaderParserMicroserviceUrl, function (req, res) {
@@ -99,6 +123,49 @@ app.get(timestampMicroServiceApiEndPointUri, function (req, res) {
     const utcString = date.toUTCString()
     res.json({ unix: unitFormat, utc: utcString })
   }
+})
+
+app.get(
+  urlShortenerShortUrlEndPoint + "/:shortCode?",
+  async function (req, res) {
+    const { shortCode } = req.params
+    if (!shortCode || isNaN(shortCode)) {
+      return res.json({ error: "Invalid URL" })
+    }
+
+    const data = await ShortenerUrl.findOne({ shortCode: Number(shortCode) })
+
+    if (!data) {
+      return res.json({ error: "No short URL found for the given input" })
+    }
+    const redirectUrl = data.url
+    return res.redirect(redirectUrl)
+    // successfull req will redirect
+    // return res.redirect(data.url)
+  }
+)
+
+app.post(urlShortenerShortUrlEndPoint, urlencodedParser, function (req, res) {
+  const { url } = req.body
+  if (!url) res.status(400).send("Url required")
+  const urlObject = new URL(url)
+  dns.lookup(urlObject.hostname, async (err) => {
+    if (err) {
+      res.json({
+        error: "Invalid URL"
+      })
+    } else {
+      const lengthOfCollection = await ShortenerUrl.count()
+      const data = await ShortenerUrl.findOne({ url })
+      if (!data) {
+        const data = await ShortenerUrl.create({
+          url,
+          shortCode: lengthOfCollection + 1
+        })
+        return res.json({ url, shortCode: data.shortCode })
+      }
+    }
+  })
 })
 
 // your first API endpoint...
