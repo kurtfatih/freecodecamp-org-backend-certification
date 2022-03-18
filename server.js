@@ -182,10 +182,18 @@ app.post(
     urlencodedParser,
     (req, _, next) => {
       const date = req.body.date
-      console.log("date inside middleware", req.body.date)
-      const isDateValid = isValidDate(date)
-      req.date = { isDateValid, value: date }
-      next()
+      if (date) {
+        const isDateValid = isValidDate(date)
+        const dateValue = isDateValid
+          ? new Date(date).toDateString()
+          : new Date().toDateString()
+
+        req.date = { isDateValid, value: dateValue }
+        return next()
+      }
+
+      req.date = { isDateValid: true, value: new Date().toDateString }
+      return next()
     }
   ],
   async function (req, res) {
@@ -197,11 +205,7 @@ app.post(
     if (!isDateValid) {
       return res.send("Date format is not valid yyyy/mm/dd")
     }
-
-    const date =
-      req.date.value.length > 0
-        ? new Date(req.date.value).toDateString()
-        : new Date().toDateString()
+    const date = req.date.value
 
     try {
       const userData = await Users.findById(_id)
@@ -350,7 +354,6 @@ var listener = app.listen(process.env.PORT || 8000, function () {
 
 //utils
 const isValidDate = (value) => {
-  if (!value) return true
   if (!value.match(/^\d{4}-\d{2}-\d{2}$/)) return false
 
   const date = new Date(value)
