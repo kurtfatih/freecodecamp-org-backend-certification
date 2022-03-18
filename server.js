@@ -21,20 +21,39 @@ const ShortenerUrl = mongoose.model("ShortenerUrl", {
   shortCode: { type: Number }
 })
 
-const apiEndPoint = "/api"
+const Users = mongoose.model("Users", {
+  username: { type: String, required: true }
+})
+
+const Exercise = mongoose.model("Exercises", {
+  userId: { type: String, required: true },
+  description: { type: String, required: true },
+  duration: { type: Number, required: true },
+  date: { type: String, required: false }
+})
+
+const apiBaseUri = "/api"
 const timestamMicroServiceProjectUrl = "/timestamp-microservice"
 const reqeustHeaderParserMicroserviceUrl = "/request-header-parser-microservice"
 const urlShortenerMicroserviceUri = "/urlshortener"
+const exerciseMicroServiceUrl = "/exercise-tracker"
 
 // services api endpoints
 const timestampMicroServiceApiEndPointUri =
-  timestamMicroServiceProjectUrl + apiEndPoint + "/:date?"
+  timestamMicroServiceProjectUrl + apiBaseUri + "/:date?"
 
 const requestHeaderParserMicroServiceEndPoint =
-  reqeustHeaderParserMicroserviceUrl + apiEndPoint
+  reqeustHeaderParserMicroserviceUrl + apiBaseUri
 
 const urlShortenerShortUrlEndPoint =
-  urlShortenerMicroserviceUri + apiEndPoint + "/shorturl"
+  urlShortenerMicroserviceUri + apiBaseUri + "/shorturl"
+
+const exerciseMicroServiceUserEndPoint =
+  exerciseMicroServiceUrl + apiBaseUri + "/users"
+const exerciseMicroServiceExerciseEndPoint =
+  exerciseMicroServiceUserEndPoint + "/:_id" + "/exercises"
+const exerciseMicroServiceLogEndPoint =
+  exerciseMicroServiceUserEndPoint + "/:_id/" + "logs?"
 
 const urlencodedParser = bodyParser.urlencoded({ extended: false })
 app.use(cors({ optionsSuccessStatus: 200 })) // some legacy browsers choke on 204
@@ -48,20 +67,142 @@ app.use(urlShortenerMicroserviceUri, express.static("urlshortener/public"))
 
 // http://expressjs.com/en/starter/basic-routing.html
 
-const services = [
-  timestamMicroServiceProjectUrl,
-  reqeustHeaderParserMicroserviceUrl,
-  urlShortenerMicroserviceUri
-].join(" ")
+// TODO MAIN SITE
+// app.get("/", function (req, res) {
+//   const host = req.get("host")
+//   const protocol = req.protocol
 
-app.get("/", function (req, res) {
-  const host = req.get("host")
-  const protocol = req.protocol
+//   res.send(
+//     `Our services : <a href=${protocol}://${host}${reqeustHeaderParserMicroserviceUrl}>Timestamp</a>`
+//   )
+// })
 
-  res.send(
-    `Our services : <a href=${protocol}://${host}${reqeustHeaderParserMicroserviceUrl}>Timestamp</a>`
-  )
+app.get(exerciseMicroServiceUrl, function (req, res) {
+  res.sendFile(__dirname + "/exercise-tracker/views/index.html")
 })
+
+app.get(exerciseMicroServiceUserEndPoint, async function (_, res) {
+  try {
+    const data = await Users.find()
+    return res.send(data)
+  } catch (e) {
+    return res.status(500).send(`${e.name}: ${e.message}`)
+  }
+})
+
+app.post(
+  exerciseMicroServiceUserEndPoint,
+  urlencodedParser,
+  async function (req, res) {
+    const { username } = req.body
+    try {
+      const data = await Users.create({ username })
+      return res.json({ username: data.username, _id: data._id })
+    } catch (e) {
+      return res.status(500).send(`${e.name}: ${e.message}`)
+    }
+  }
+)
+
+app.get(
+  exerciseMicroServiceExerciseEndPoint,
+  urlencodedParser,
+  async function (req, res) {
+    const { _id } = req.params
+    try {
+      const userData = await Users.findById(_id)
+      if (!userData) {
+        return res.send("[object Object]")
+      }
+      const exerciseData = await Exercise.findOne({ userId: _id })
+
+      if (!exerciseData) {
+        res.send("Not found")
+      }
+      return res.json({
+        _id,
+        username: userData.username,
+        date: exerciseData.date,
+        duration: exerciseData.duration,
+        description: exerciseData.description
+      })
+    } catch (e) {
+      return res.status(500).send(`${e.name}: ${e.message}`)
+    }
+  }
+)
+
+app.get(exerciseMicroServiceLogEndPoint, async function (req, res) {
+  const { _id } = req.params
+  try {
+    const userData = await Users.findById(_id)
+    if (!userData) {
+      return res.send("[object Object]")
+    }
+    const exerciseData = await Exercise.find({ userId: _id })
+      .select(["-_id", "-userId"])
+      .select("-__v")
+    // .select("-userId")
+    return res.json({
+      _id,
+      username: userData.username,
+      count: exerciseData.length,
+      log: exerciseData
+    })
+  } catch (e) {
+    return res.status(500).send(`${e.name}: ${e.message}`)
+  }
+})
+
+app.post(
+  exerciseMicroServiceExerciseEndPoint,
+  [
+    urlencodedParser,
+    (req, _, next) => {
+      const date = req.body.date
+      const isDateValid = isValidDate(date)
+      req.date = { isDateValid, value: req.body.date }
+      next()
+    }
+  ],
+  async function (req, res) {
+    const { _id } = req.params
+    const description = req.body.description
+    const duration = req.body.duration
+    const isDateValid = req.date.isDateValid
+    if (!isDateValid) {
+      return res.send("Date format is not valid yyyy/mm/dd")
+    }
+
+    const date =
+      req.date.value.length > 0
+        ? new Date(req.date.value).toDateString()
+        : new Date().toDateString()
+
+    try {
+      const userData = await Users.findById(_id)
+
+      const createdExerciseData = await Exercise.create({
+        userId: _id,
+        description,
+        username: userData.username,
+        duration,
+        date
+      })
+
+      return res.json({
+        _id: createdExerciseData.userId,
+        username: userData.username,
+        date: createdExerciseData.date,
+        duration: createdExerciseData.duration,
+        description: createdExerciseData.description
+      })
+    } catch (e) {
+      return res.send(e)
+    }
+  }
+)
+
 app.get(urlShortenerMicroserviceUri, function (req, res) {
   res.sendFile(__dirname + "/urlshortener/views/index.html")
 })
@@ -73,9 +214,6 @@ app.get(reqeustHeaderParserMicroserviceUrl, function (req, res) {
 app.get(
   requestHeaderParserMicroServiceEndPoint + "/whoami",
   function (req, res) {
-    //     {"ipaddress":"159.20.14.100","language":"en-US,en;q=0.5",
-    // "software":"Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:50.0) Gecko/20100101 Firefox/50.0"}
-
     const software = req.headers["user-agent"]
     const language = req.headers["accept-language"]
     const ipAddress = req.headers["x-forwarded-for"] || req.socket.remoteAddress
@@ -185,3 +323,13 @@ app.get("/api/hello", function (req, res) {
 var listener = app.listen(process.env.PORT || 8000, function () {
   console.log("Your app is listening on port " + listener.address().port)
 })
+
+//utils
+const isValidDate = (value) => {
+  if (!value) return true
+  if (!value.match(/^\d{4}-\d{2}-\d{2}$/)) return false
+
+  const date = new Date(value)
+  if (!date.getTime()) return false
+  return date.toISOString().slice(0, 10) === value
+}
