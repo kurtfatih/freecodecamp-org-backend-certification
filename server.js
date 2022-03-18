@@ -104,33 +104,33 @@ app.post(
   }
 )
 
-app.get(
-  exerciseMicroServiceExerciseEndPoint,
-  urlencodedParser,
-  async function (req, res) {
-    const { _id } = req.params
-    try {
-      const userData = await Users.findById(_id)
-      if (!userData) {
-        return res.send("[object Object]")
-      }
-      const exerciseData = await Exercise.findOne({ userId: _id })
+// app.get(
+//   exerciseMicroServiceExerciseEndPoint,
+//   urlencodedParser,
+//   async function (req, res) {
+//     const { _id } = req.params
+//     try {
+//       const userData = await Users.findById(_id)
+//       if (!userData) {
+//         return res.send("[object Object]")
+//       }
+//       const exerciseData = await Exercise.findOne({ userId: _id })
 
-      if (!exerciseData) {
-        res.send("Not found")
-      }
-      return res.json({
-        _id,
-        username: userData.username,
-        date: exerciseData.date,
-        duration: exerciseData.duration,
-        description: exerciseData.description
-      })
-    } catch (e) {
-      return res.status(500).send(`${e.name}: ${e.message}`)
-    }
-  }
-)
+//       if (!exerciseData) {
+//         res.send("Not found")
+//       }
+//       return res.json({
+//         _id,
+//         username: userData.username,
+//         date: exerciseData.date,
+//         duration: exerciseData.duration,
+//         description: exerciseData.description
+//       })
+//     } catch (e) {
+//       return res.status(500).send(`${e.name}: ${e.message}`)
+//     }
+//   }
+// )
 
 app.get(exerciseMicroServiceLogEndPoint, async function (req, res) {
   const { _id } = req.params
