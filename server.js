@@ -3,7 +3,6 @@ const bodyParser = require("body-parser")
 
 const URL = require("url").URL
 
-const { Schema } = require("mongoose")
 const mongoose = require("mongoose")
 
 const cors = require("cors")
@@ -126,7 +125,7 @@ app.get(timestampMicroServiceApiEndPointUri, function (req, res) {
 })
 
 app.get(
-  urlShortenerShortUrlEndPoint + "/:shortCode?",
+  urlShortenerShortUrlEndPoint + "/:shortCode",
   async function (req, res) {
     const { shortCode } = req.params
     if (!shortCode || isNaN(shortCode)) {
@@ -145,6 +144,10 @@ app.get(
   }
 )
 
+app.get(urlShortenerShortUrlEndPoint, async function (req, res) {
+  return res.send("Not found")
+})
+
 app.post(urlShortenerShortUrlEndPoint, urlencodedParser, function (req, res) {
   const { url } = req.body
   if (!url) res.status(400).send("Url required")
@@ -158,12 +161,17 @@ app.post(urlShortenerShortUrlEndPoint, urlencodedParser, function (req, res) {
       const lengthOfCollection = await ShortenerUrl.count()
       const data = await ShortenerUrl.findOne({ url })
       if (!data) {
-        const data = await ShortenerUrl.create({
+        const createdUrlData = await ShortenerUrl.create({
           url,
           shortCode: lengthOfCollection + 1
         })
-        return res.json({ url, shortCode: data.shortCode })
+        return res
+          .status(200)
+          .json({ original_url: url, short_url: createdUrlData.shortCode })
       }
+      return res
+        .status(200)
+        .json({ original_url: url, short_url: data.shortCode })
     }
   })
 })
