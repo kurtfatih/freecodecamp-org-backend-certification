@@ -53,7 +53,7 @@ const exerciseMicroServiceUserEndPoint =
 const exerciseMicroServiceExerciseEndPoint =
   exerciseMicroServiceUserEndPoint + "/:_id" + "/exercises"
 const exerciseMicroServiceLogEndPoint =
-  exerciseMicroServiceUserEndPoint + "/:_id/" + "logs?"
+  exerciseMicroServiceUserEndPoint + "/:_id/" + "logs"
 
 const urlencodedParser = bodyParser.urlencoded({ extended: false })
 app.use(cors({ optionsSuccessStatus: 200 })) // some legacy browsers choke on 204
@@ -134,20 +134,41 @@ app.get(
 
 app.get(exerciseMicroServiceLogEndPoint, async function (req, res) {
   const { _id } = req.params
+  const { limit, from, to } = req.query
+
   try {
     const userData = await Users.findById(_id)
     if (!userData) {
       return res.send("[object Object]")
     }
+
     const exerciseData = await Exercise.find({ userId: _id })
       .select(["-_id", "-userId"])
       .select("-__v")
+      .limit(limit)
+    let exerciseDataLog = exerciseData
+    if (from || to) {
+      let fromDate = new Date(0)
+      let toDate = new Date()
+      if (from) {
+        fromDate = new Date(from)
+      }
+      if (to) {
+        toDate = new Date(to)
+      }
+      fromDate = fromDate.getTime()
+      toDate = toDate.getTime()
+      exerciseDataLog = exerciseData.filter(({ date }) => {
+        let logDate = new Date(date).getTime()
+        return logDate >= fromDate && logDate <= toDate
+      })
+    }
     // .select("-userId")
     return res.json({
       _id,
       username: userData.username,
-      count: exerciseData.length,
-      log: exerciseData
+      count: from || to ? exerciseDataLog.length : exerciseData.length,
+      log: exerciseDataLog
     })
   } catch (e) {
     return res.status(500).send(`${e.name}: ${e.message}`)
