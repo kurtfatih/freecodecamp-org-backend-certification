@@ -181,12 +181,14 @@ app.post(
     urlencodedParser,
     (req, _, next) => {
       const date = req.body.date
+      console.log("date inside middleware", req.body.date)
       const isDateValid = isValidDate(date)
       req.date = { isDateValid, value: date }
       next()
     }
   ],
   async function (req, res) {
+    console.log("date inside root ", req.body.date)
     const { _id } = req.params
     const description = req.body.description
     const duration = req.body.duration
