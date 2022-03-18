@@ -182,7 +182,7 @@ app.post(
     (req, _, next) => {
       const date = req.body.date
       const isDateValid = isValidDate(date)
-      req.date = { isDateValid, value: req.body.date }
+      req.date = { isDateValid, value: date }
       next()
     }
   ],
