@@ -146,7 +146,7 @@ app.get(exerciseMicroServiceLogEndPoint, async function (req, res) {
     const exerciseData = await Exercise.find({ userId: _id })
       .select(["-_id", "-userId"])
       .select("-__v")
-      .limit(limit)
+
     let exerciseDataLog = exerciseData
     if (from || to) {
       let fromDate = new Date(0)
@@ -163,6 +163,10 @@ app.get(exerciseMicroServiceLogEndPoint, async function (req, res) {
         let logDate = new Date(date).getTime()
         return logDate >= fromDate && logDate <= toDate
       })
+    }
+
+    if (limit) {
+      exerciseDataLog = exerciseDataLog.slice(0, limit)
     }
     // .select("-userId")
     return res.json({
