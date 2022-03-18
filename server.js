@@ -169,10 +169,12 @@ app.get(exerciseMicroServiceLogEndPoint, async function (req, res) {
       exerciseDataLog = exerciseDataLog.slice(0, limit)
     }
     // .select("-userId")
+
+    console.log("typeof date", typeof exerciseDataLog[0].date)
     return res.json({
       _id,
       username: userData.username,
-      count: from || to ? exerciseDataLog.length : exerciseData.length,
+      count: exerciseDataLog.length,
       log: exerciseDataLog
     })
   } catch (e) {
