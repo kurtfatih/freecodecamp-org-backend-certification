@@ -97,6 +97,7 @@ app.post(
     const { username } = req.body
     try {
       const data = await Users.create({ username })
+      console.log("user data", data)
       return res.json({ username: data.username, _id: data._id })
     } catch (e) {
       return res.status(500).send(`${e.name}: ${e.message}`)
