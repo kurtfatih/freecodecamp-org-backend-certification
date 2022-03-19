@@ -97,7 +97,6 @@ app.post(
     const { username } = req.body
     try {
       const data = await Users.create({ username })
-      console.log("user data", data)
       return res.json({ username: data.username, _id: data._id })
     } catch (e) {
       return res.status(500).send(`${e.name}: ${e.message}`)
@@ -192,6 +191,7 @@ app.post(
         const dateValue = isDateValid
           ? new Date(date).toDateString()
           : new Date().toDateString()
+        console.log("raw date and result", date, dateValue)
 
         req.date = { isDateValid, value: dateValue }
         return next()
@@ -202,7 +202,6 @@ app.post(
     }
   ],
   async function (req, res) {
-    console.log("date inside root ", req.body.date)
     const { _id } = req.params
     const description = req.body.description
     const duration = req.body.duration
