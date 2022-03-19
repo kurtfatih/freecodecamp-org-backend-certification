@@ -136,7 +136,6 @@ app.post(
 app.get(exerciseMicroServiceLogEndPoint, async function (req, res) {
   const { _id } = req.params
   const { limit, from, to } = req.query
-
   try {
     const userData = await Users.findById(_id)
     if (!userData) {
@@ -154,6 +153,7 @@ app.get(exerciseMicroServiceLogEndPoint, async function (req, res) {
       if (from) {
         fromDate = new Date(from)
       }
+
       if (to) {
         toDate = new Date(to)
       }
@@ -168,15 +168,14 @@ app.get(exerciseMicroServiceLogEndPoint, async function (req, res) {
     if (limit) {
       exerciseDataLog = exerciseDataLog.slice(0, limit)
     }
-    // .select("-userId")
-
-    console.log("typeof date", typeof exerciseDataLog[0].date)
-    return res.json({
+    const responseObj = {
       _id,
       username: userData.username,
       count: exerciseDataLog.length,
       log: exerciseDataLog
-    })
+    }
+    console.log("result", responseObj)
+    return res.json(responseObj)
   } catch (e) {
     return res.status(500).send(`${e.name}: ${e.message}`)
   }
