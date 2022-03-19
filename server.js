@@ -173,7 +173,6 @@ app.get(exerciseMicroServiceLogEndPoint, async function (req, res) {
       count: exerciseDataLog.length,
       log: exerciseDataLog
     }
-    console.log("result", responseObj)
     return res.json(responseObj)
   } catch (e) {
     return res.status(500).send(`${e.name}: ${e.message}`)
