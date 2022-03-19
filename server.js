@@ -191,13 +191,12 @@ app.post(
         const dateValue = isDateValid
           ? new Date(date).toDateString()
           : new Date().toDateString()
-        console.log("raw date and result", date, dateValue)
 
         req.date = { isDateValid, value: dateValue }
         return next()
       }
 
-      req.date = { isDateValid: true, value: new Date().toDateString }
+      req.date = { isDateValid: true, value: new Date().toDateString() }
       return next()
     }
   ],
