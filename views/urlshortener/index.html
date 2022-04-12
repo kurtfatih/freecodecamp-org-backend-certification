@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html>
   <head>
     <title>URL Shortener Microservice | freeCodeCamp.org</title>
@@ -8,14 +7,14 @@
       type="image/png"
       href="https://cdn.freecodecamp.org/universal/favicons/favicon-16x16.png"
     />
-    <link href="/public/style.css" rel="stylesheet" type="text/css" />
+    <link href="url-shortener.css" rel="stylesheet" type="text/css" />
   </head>
 
   <body>
     <h1>URL Shortener Microservice</h1>
     <main>
       <section>
-        <form action="/urlshortener/api/shorturl" method="POST">
+        <form action="/api/urlshortener/shorturl" method="POST">
           <fieldset>
             <legend>URL Shortener</legend>
             <label for="url_input">URL:</label>
@@ -23,7 +22,7 @@
               id="url_input"
               type="text"
               name="url"
-              placeholder="https://www.freecodecamp.org/"
+              placeholder="https://fatih-kurt.vercel.app/"
             />
             <input type="submit" value="POST URL" />
           </fieldset>
@@ -31,7 +30,7 @@
       </section>
     </main>
     <footer>
-      <p>By <a href="https://www.freecodecamp.org/">freeCodeCamp</a></p>
+      <p>By <a href="https://github.com/kurtfatih">Fatih Kurt</a></p>
     </footer>
   </body>
 </html>
