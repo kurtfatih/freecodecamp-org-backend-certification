@@ -10,9 +10,7 @@ const express = require("express")
 const app = express()
 
 const dns = require("dns")
-const multer = require("multer")
 const apiRoutes = require("./routes")
-const upload = multer({ dest: "filemetadata/uploads/" })
 
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
@@ -28,7 +26,6 @@ const apiBaseUri = "/api"
 const timestamMicroServiceProjectUrl = "/timestamp-microservice"
 const reqeustHeaderParserMicroserviceUrl = "/request-header-parser-microservice"
 const urlShortenerMicroserviceUri = "/urlshortener"
-const fileMetaDataServiceUri = "/file-metadata-microservice"
 
 // services api endpoints
 const timestampMicroServiceApiEndPointUri =
@@ -40,10 +37,8 @@ const requestHeaderParserMicroServiceEndPoint =
 const urlShortenerShortUrlEndPoint =
   urlShortenerMicroserviceUri + apiBaseUri + "/shorturl"
 
-const fileMetaDataServiceFileAnalysisApiEndpoint =
-  fileMetaDataServiceUri + apiBaseUri + "/fileanalyse"
-
 const urlencodedParser = bodyParser.urlencoded({ extended: false })
+
 app.use(cors({ optionsSuccessStatus: 200 })) // some legacy browsers choke on 204
 // http://expressjs.com/en/starter/static-files.html
 app.use(timestamMicroServiceProjectUrl, express.static("timestamp/public"))
@@ -65,24 +60,6 @@ app.use("/api", apiRoutes)
 //     `Our services : <a href=${protocol}://${host}${reqeustHeaderParserMicroserviceUrl}>Timestamp</a>`
 //   )
 // })
-
-app.get(fileMetaDataServiceUri, function (_, res) {
-  res.sendFile(__dirname + "/filemetadata/views/index.html")
-})
-
-app.post(
-  fileMetaDataServiceFileAnalysisApiEndpoint,
-  upload.single("upfile"),
-  function (req, res) {
-    const file = req.file
-    const resObj = {
-      name: file.originalname,
-      type: file.mimetype,
-      size: file.size
-    }
-    return res.json(resObj)
-  }
-)
 
 // app.get(
 //   exerciseMicroServiceExerciseEndPoint,
