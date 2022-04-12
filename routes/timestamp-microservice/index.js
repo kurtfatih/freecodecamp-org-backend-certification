@@ -6,8 +6,6 @@ const {
 
 const timestampMicroServiceRouter = express.Router()
 
-timestampMicroServiceRouter.use(express.static("public"))
-
 timestampMicroServiceRouter.get("/", getTimestampIndexHtml)
 timestampMicroServiceRouter.get("/:date?", getTimestamp)
 

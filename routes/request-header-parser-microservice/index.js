@@ -8,7 +8,6 @@ const {
 
 const requestHeaderParserRoutes = express.Router()
 
-requestHeaderParserRoutes.use(express.static("public"))
 requestHeaderParserRoutes.get("/", getRequestHeaderParserIndexHtml)
 requestHeaderParserRoutes.get("/whoami", getWhoAmI)
 

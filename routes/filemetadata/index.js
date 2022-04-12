@@ -8,8 +8,6 @@ const uploadSingleFileMiddleWare = require("../../middlewares/filemeta-data-midd
 
 const fileMetaDataRoutes = express.Router()
 
-fileMetaDataRoutes.use(express.static("public"))
-
 fileMetaDataRoutes.get("/", getFileMetaDataRoutesIndexHtml)
 
 fileMetaDataRoutes.use("/fileanalyse", uploadSingleFileMiddleWare)

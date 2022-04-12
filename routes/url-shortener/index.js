@@ -10,7 +10,6 @@ const {
 
 const urlShortenerRoutes = express.Router()
 
-urlShortenerRoutes.use(express.static("public"))
 urlShortenerRoutes.use("/shorturl", urlencodedParser)
 
 urlShortenerRoutes.get("/", getUrlShortenerIndexHtml)
