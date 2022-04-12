@@ -7,6 +7,6 @@ const {
 const timestampMicroServiceRouter = express.Router()
 
 timestampMicroServiceRouter.get("/", getTimestampIndexHtml)
-timestampMicroServiceRouter.get("/:date?", getTimestamp)
+timestampMicroServiceRouter.get("/api/:date?", getTimestamp)
 
 module.exports = { timestampMicroServiceRouter }
