@@ -12,7 +12,6 @@ app.use(cors({ optionsSuccessStatus: 200 }))
 app.use(express.static(path.join(__dirname, "public")))
 
 app.use("/api", apiRoutes)
-// console.log(path.join(__dirname, "public"))
 
 const main = () => {
   try {
