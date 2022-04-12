@@ -16,7 +16,7 @@ apiRoutes.use("/urlshortener", urlShortenerRoutes)
 apiRoutes.use("/request-header-parser-microservice", requestHeaderParserRoutes)
 apiRoutes.get("/", (_, res) =>
   res.send(
-    '<p><a href="exercise-tracker">Exercise Tracker</a></p><p><a href="file-metadata-microservice">File Metadata Microservice</a></p><p><a href="timestamp-microservice">Timestamp Microservice</a></p><p><a href="urlshortener">Url Shortener</a></p><p><a href="request-header-parser-microservice">Request Header Parser Microservice</a></p>'
+    '<p><a href="/api/exercise-tracker">Exercise Tracker</a></p><p><a href="/api/file-metadata-microservice">File Metadata Microservice</a></p><p><a href="/api/timestamp-microservice">Timestamp Microservice</a></p><p><a href="/api/urlshortener">Url Shortener</a></p><p><a href="/api/request-header-parser-microservice">Request Header Parser Microservice</a></p>'
   )
 )
 
