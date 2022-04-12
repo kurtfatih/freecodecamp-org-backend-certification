@@ -10,10 +10,10 @@ const {
 
 const urlShortenerRoutes = express.Router()
 
-urlShortenerRoutes.use("/shorturl", urlencodedParser)
+urlShortenerRoutes.use("/api/shorturl", urlencodedParser)
 
 urlShortenerRoutes.get("/", getUrlShortenerIndexHtml)
-urlShortenerRoutes.post("/shorturl", findOrCreateShortenerUrl)
-urlShortenerRoutes.get("/shorturl/:shortCode", getShortUrl)
+urlShortenerRoutes.post("/api/shorturl", findOrCreateShortenerUrl)
+urlShortenerRoutes.get("/api/shorturl/:shortCode", getShortUrl)
 
 module.exports = { urlShortenerRoutes }

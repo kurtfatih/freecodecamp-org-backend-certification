@@ -14,16 +14,16 @@ const urlencodedParser = bodyParser.urlencoded({ extended: false })
 
 const exerciseTrackerRoutes = express.Router()
 
-exerciseTrackerRoutes.use("/users", urlencodedParser)
-exerciseTrackerRoutes.use("/users/:id/exercises", [
+exerciseTrackerRoutes.use("/api/users", urlencodedParser)
+exerciseTrackerRoutes.use("/api/users/:id/exercises", [
   urlencodedParser,
   exerciseTrackerMiddleWare
 ])
 
 exerciseTrackerRoutes.get("/", getExerciseTrackerIndexHtml)
-exerciseTrackerRoutes.get("/users", getUsers)
-exerciseTrackerRoutes.post("/users", createUser)
-exerciseTrackerRoutes.get("/users/:_id/logs", getUserLogs)
-exerciseTrackerRoutes.post("/users/:_id/exercises", createExerciseForUser)
+exerciseTrackerRoutes.get("/api/users", getUsers)
+exerciseTrackerRoutes.post("/api/users", createUser)
+exerciseTrackerRoutes.get("/api/users/:_id/logs", getUserLogs)
+exerciseTrackerRoutes.post("/api/users/:_id/exercises", createExerciseForUser)
 
 module.exports = { exerciseTrackerRoutes }

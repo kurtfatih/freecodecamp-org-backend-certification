@@ -9,6 +9,6 @@ const {
 const requestHeaderParserRoutes = express.Router()
 
 requestHeaderParserRoutes.get("/", getRequestHeaderParserIndexHtml)
-requestHeaderParserRoutes.get("/whoami", getWhoAmI)
+requestHeaderParserRoutes.get("/api/whoami", getWhoAmI)
 
 module.exports = { requestHeaderParserRoutes }

@@ -10,8 +10,8 @@ const fileMetaDataRoutes = express.Router()
 
 fileMetaDataRoutes.get("/", getFileMetaDataRoutesIndexHtml)
 
-fileMetaDataRoutes.use("/fileanalyse", uploadSingleFileMiddleWare)
+fileMetaDataRoutes.use("/api/fileanalyse", uploadSingleFileMiddleWare)
 
-fileMetaDataRoutes.post("/fileanalyse", uploadSingleFile)
+fileMetaDataRoutes.post("/api/fileanalyse", uploadSingleFile)
 
 module.exports = { fileMetaDataRoutes }
